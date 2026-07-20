@@ -148,6 +148,20 @@ body {
   color: var(--accent-ink);
 }
 
+/* Every clickable element should show a pointer cursor, regardless of component-level styling. */
+button:not(:disabled),
+a,
+[role="button"],
+select,
+input[type="checkbox"],
+input[type="radio"],
+label:has(input) {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

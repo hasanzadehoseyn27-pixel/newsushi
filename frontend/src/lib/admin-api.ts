@@ -25,7 +25,7 @@ async function adminFetch<T>(
     },
   });
 
-  if (res.status === 401) {
+  if (res.status === 401 && token) {
     useAdminAuthStore.getState().logout();
     throw new AdminApiError("نشست شما منقضی شده، دوباره وارد شوید", 401);
   }

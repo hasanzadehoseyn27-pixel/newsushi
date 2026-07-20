@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type TargetAndTransition } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { localizedName, resolveImageUrl } from "@/lib/api";
 import type { AnimationPreset, Locale, Product } from "@/lib/types";
@@ -26,13 +27,12 @@ export function ProductCard({
   product,
   locale,
   categorySlug,
-  currency = "تومان",
 }: {
   product: Product;
   locale: Locale;
   categorySlug?: string;
-  currency?: string;
 }) {
+  const t = useTranslations("product");
   const name = localizedName(product, locale);
   const cover = product.images[0] ? resolveImageUrl(product.images[0]) : undefined;
 
@@ -83,7 +83,7 @@ export function ProductCard({
           {name}
         </h3>
         <p className="mt-1 font-mono text-sm" style={{ color: "var(--accent)" }}>
-          {product.price_toman.toLocaleString("fa-IR")} {currency}
+          {product.price_toman.toLocaleString("fa-IR")} {t("currency")}
         </p>
       </motion.article>
     </Link>

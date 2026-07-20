@@ -28,7 +28,16 @@
     "spicy": "辛い",
     "gallery": "ギャラリー",
     "related": "おすすめの組み合わせ",
-    "outOfStock": "売り切れ"
+    "outOfStock": "売り切れ",
+    "currency": "トマン"
+  },
+  "cart": {
+    "title": "カート",
+    "empty": "カートは空です。",
+    "currency": "トマン",
+    "remove": "削除",
+    "clear": "カートを空にする",
+    "total": "合計"
   },
   "footer": {
     "rights": "全著作権所有",

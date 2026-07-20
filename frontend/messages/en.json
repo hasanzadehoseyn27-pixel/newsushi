@@ -28,7 +28,16 @@
     "spicy": "Spicy",
     "gallery": "Gallery",
     "related": "Pairs well with",
-    "outOfStock": "Out of stock"
+    "outOfStock": "Out of stock",
+    "currency": "Toman"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "currency": "Toman",
+    "remove": "Remove",
+    "clear": "Clear cart",
+    "total": "Total"
   },
   "footer": {
     "rights": "All rights reserved",

@@ -28,7 +28,16 @@
     "spicy": "تند",
     "gallery": "گالری تصاویر",
     "related": "پیشنهاد مکمل",
-    "outOfStock": "ناموجود"
+    "outOfStock": "ناموجود",
+    "currency": "تومان"
+  },
+  "cart": {
+    "title": "سبد خرید",
+    "empty": "سبد خرید شما خالی است.",
+    "currency": "تومان",
+    "remove": "حذف",
+    "clear": "خالی کردن سبد",
+    "total": "جمع کل"
   },
   "footer": {
     "rights": "تمام حقوق محفوظ است",

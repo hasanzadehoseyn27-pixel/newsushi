@@ -151,7 +151,7 @@ export default async function ProductPage({
             )}
 
             <p className="mt-8 font-mono text-2xl" style={{ color: "var(--accent)" }}>
-              {product.price_toman.toLocaleString("fa-IR")} تومان
+              {product.price_toman.toLocaleString("fa-IR")} {t("currency")}
             </p>
 
             <div className="mt-6">

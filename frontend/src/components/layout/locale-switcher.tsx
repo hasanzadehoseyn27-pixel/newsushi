@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 
-const LABEL: Record<string, string> = { fa: "فا", en: "EN", ja: "日" };
+const FLAG: Record<string, string> = { fa: "🇮🇷", en: "🇬🇧", ja: "🇯🇵" };
 
 export function LocaleSwitcher() {
   const pathname = usePathname();
@@ -17,13 +17,14 @@ export function LocaleSwitcher() {
         <button
           key={locale}
           onClick={() => router.replace(pathname as "/", { locale })}
-          className="rounded-full px-2.5 py-1 text-xs font-medium transition-colors"
+          aria-label={locale}
+          className="cursor-pointer rounded-full px-2 py-1 text-base transition-transform hover:scale-110"
           style={{
-            background: activeLocale === locale ? "var(--accent)" : "transparent",
-            color: activeLocale === locale ? "var(--accent-ink)" : "var(--ink-soft)",
+            background: activeLocale === locale ? "var(--accent-soft)" : "transparent",
+            outline: activeLocale === locale ? "1.5px solid var(--accent)" : "none",
           }}
         >
-          {LABEL[locale]}
+          {FLAG[locale]}
         </button>
       ))}
     </div>
