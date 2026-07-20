@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { DayNightToggle } from "@/components/theme/day-night-toggle";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
+import { CartBadge } from "@/components/layout/cart-badge";
 
 export function Header() {
   const t = useTranslations("nav");
@@ -30,10 +31,11 @@ export function Header() {
         <Link
           href="/cart"
           aria-label={t("cart")}
-          className="flex h-9 w-9 items-center justify-center rounded-full border text-sm"
+          className="relative flex h-11 w-11 items-center justify-center rounded-full border text-xl"
           style={{ borderColor: "var(--line)" }}
         >
           🛒
+          <CartBadge />
         </Link>
       </div>
     </header>

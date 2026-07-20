@@ -3,29 +3,28 @@ import localFont from "next/font/local";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
 import { routing } from "@/i18n/routing";
 import { DayNightProvider } from "@/components/theme/day-night-provider";
 import { AccentInit } from "@/components/theme/accent-init";
-import { ACCENT_THEMES, type AccentTheme } from "@/lib/theme/accent-store";
-import "./globals.css";
+import { getAccentTheme } from "@/lib/api";
+import "../../globals.css";
 
 // Self-hosted (no runtime call to Google Fonts — faster, more private, works offline).
 // Shippori Mincho is subset to only the Japanese characters actually used in the UI.
 const shippori = localFont({
-  src: "../../fonts/shippori-mincho/ShipporiMincho-subset.woff2",
+  src: "../../../fonts/shippori-mincho/ShipporiMincho-subset.woff2",
   weight: "800",
   variable: "--font-shippori",
   display: "swap",
 });
 const vazirmatn = localFont({
-  src: "../../fonts/vazirmatn/Vazirmatn-Variable.woff2",
+  src: "../../../fonts/vazirmatn/Vazirmatn-Variable.woff2",
   variable: "--font-vazirmatn",
   display: "swap",
   weight: "100 900",
 });
 const jetbrainsMono = localFont({
-  src: "../../fonts/jetbrains-mono/JetBrainsMono-Variable.woff2",
+  src: "../../../fonts/jetbrains-mono/JetBrainsMono-Variable.woff2",
   variable: "--font-jetbrains",
   display: "swap",
   weight: "100 800",
@@ -84,13 +83,7 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
 
-  const cookieStore = await cookies();
-  const cookieAccent = cookieStore.get("accent")?.value as AccentTheme | undefined;
-  const initialAccent: AccentTheme = ACCENT_THEMES.includes(
-    cookieAccent as AccentTheme
-  )
-    ? (cookieAccent as AccentTheme)
-    : "ai";
+  const initialAccent = await getAccentTheme();
 
   return (
     <html lang={locale} dir={DIR_BY_LOCALE[locale]} data-accent={initialAccent} suppressHydrationWarning>
