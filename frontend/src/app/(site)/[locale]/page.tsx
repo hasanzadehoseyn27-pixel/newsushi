@@ -32,8 +32,34 @@ function HomeContent({
 }) {
   const t = useTranslations("hero");
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Restaurant",
+        name: "NewSushi",
+        alternateName: "新寿司",
+        url: siteUrl,
+        servesCuisine: "Japanese",
+        priceRange: "$$",
+      },
+      {
+        "@type": "WebSite",
+        name: "NewSushi",
+        url: siteUrl,
+        inLanguage: ["fa", "en", "ja"],
+      },
+    ],
+  };
+
   return (
     <>
+      {/* eslint-disable-next-line @next/next/no-script-component-in-head */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       <section className="relative overflow-hidden px-6 pb-10 pt-14 md:pt-20">
