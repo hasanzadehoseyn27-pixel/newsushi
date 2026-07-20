@@ -10,6 +10,7 @@ export default function AdminLoginPage() {
   const setToken = useAdminAuthStore((s) => s.setToken);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,15 +50,26 @@ export default function AdminLoginPage() {
             className="rounded-lg border px-4 py-2.5 outline-none"
             style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
           />
-          <input
-            type="password"
-            placeholder="رمز عبور"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="rounded-lg border px-4 py-2.5 outline-none"
-            style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="رمز عبور"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full rounded-lg border px-4 py-2.5 pe-11 outline-none"
+              style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "مخفی کردن رمز" : "نمایش رمز"}
+              className="absolute top-1/2 -translate-y-1/2 end-3 text-lg"
+              style={{ color: "var(--ink-soft)" }}
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
         </div>
 
         {error && (
