@@ -3,8 +3,7 @@
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
-
-const FLAG: Record<string, string> = { fa: "🇮🇷", en: "🇬🇧", ja: "🇯🇵" };
+import { LocaleFlag } from "@/components/layout/flag-icons";
 
 export function LocaleSwitcher() {
   const pathname = usePathname();
@@ -12,19 +11,19 @@ export function LocaleSwitcher() {
   const activeLocale = useLocale();
 
   return (
-    <div className="flex items-center gap-1 rounded-full border p-1" style={{ borderColor: "var(--line)" }}>
+    <div className="flex items-center gap-1.5 rounded-full border px-1.5 py-1" style={{ borderColor: "var(--line)" }}>
       {routing.locales.map((locale) => (
         <button
           key={locale}
           onClick={() => router.replace(pathname as "/", { locale })}
           aria-label={locale}
-          className="cursor-pointer rounded-full px-2 py-1 text-base transition-transform hover:scale-110"
+          className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full transition-transform hover:scale-110"
           style={{
-            background: activeLocale === locale ? "var(--accent-soft)" : "transparent",
-            outline: activeLocale === locale ? "1.5px solid var(--accent)" : "none",
+            outline: activeLocale === locale ? "2px solid var(--accent)" : "1px solid var(--line)",
+            outlineOffset: 1,
           }}
         >
-          {FLAG[locale]}
+          <LocaleFlag locale={locale} className="h-full w-full object-cover" />
         </button>
       ))}
     </div>

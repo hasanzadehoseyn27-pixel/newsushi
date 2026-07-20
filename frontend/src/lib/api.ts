@@ -76,7 +76,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getAccentTheme(): Promise<AccentTheme> {
-  const data = await safeFetch<{ accent_theme: AccentTheme }>("/api/settings", 15);
+  const data = await safeFetch<{ accent_theme: AccentTheme }>("/api/settings", 0);
   return data?.accent_theme ?? "ai";
 }
 

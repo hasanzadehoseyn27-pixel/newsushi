@@ -18,14 +18,18 @@ export function DayNightToggle() {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? t("day") : t("night")}
-      className="relative flex h-9 w-16 items-center rounded-full border px-1"
-      style={{ borderColor: "var(--line)", background: "var(--surface-2)" }}
+      className="flex h-9 w-16 shrink-0 items-center rounded-full border p-1"
+      style={{
+        borderColor: "var(--line)",
+        background: "var(--surface-2)",
+        justifyContent: isDark ? "flex-end" : "flex-start",
+      }}
     >
       <motion.span
-        className="flex h-7 w-7 items-center justify-center rounded-full text-sm"
+        layout
+        transition={{ type: "spring", stiffness: 400, damping: 26 }}
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm"
         style={{ background: "var(--accent)", color: "var(--accent-ink)" }}
-        animate={{ x: isDark ? 28 : 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
       >
         {mounted ? (isDark ? "🌙" : "☀️") : null}
       </motion.span>
