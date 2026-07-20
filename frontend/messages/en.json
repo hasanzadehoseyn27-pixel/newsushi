@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Menu",
+    "about": "About",
+    "cart": "Cart",
+    "search": "Search dishes..."
+  },
+  "hero": {
+    "eyebrow": "Modern Kaiten-zushi",
+    "title": "Sushi that arrives like a wave",
+    "subtitle": "Handmade, always fresh. Order and watch the belt turn.",
+    "cta": "See the Menu",
+    "ctaSecondary": "What's fresh today?"
+  },
+  "categories": {
+    "title": "Categories",
+    "nigiri": "Nigiri",
+    "maki": "Maki",
+    "sashimi": "Sashimi",
+    "temaki": "Temaki",
+    "special": "Chef's Special"
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "ingredients": "Ingredients",
+    "price": "Price",
+    "spicy": "Spicy",
+    "gallery": "Gallery",
+    "related": "Pairs well with",
+    "outOfStock": "Out of stock"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "hours": "Opening hours",
+    "contact": "Contact us"
+  },
+  "theme": {
+    "day": "Day",
+    "night": "Night"
+  }
+}

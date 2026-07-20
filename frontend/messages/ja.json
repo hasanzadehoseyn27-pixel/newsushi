@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "products": "メニュー",
+    "about": "私たちについて",
+    "cart": "カート",
+    "search": "料理を検索..."
+  },
+  "hero": {
+    "eyebrow": "モダン回転寿司",
+    "title": "波のように届く寿司",
+    "subtitle": "手作りで、いつも新鮮。注文してベルトの回転をご覧ください。",
+    "cta": "メニューを見る",
+    "ctaSecondary": "今日のおすすめは?"
+  },
+  "categories": {
+    "title": "カテゴリー",
+    "nigiri": "握り",
+    "maki": "巻き寿司",
+    "sashimi": "刺身",
+    "temaki": "手巻き",
+    "special": "シェフのおすすめ"
+  },
+  "product": {
+    "addToCart": "カートに追加",
+    "ingredients": "材料",
+    "price": "価格",
+    "spicy": "辛い",
+    "gallery": "ギャラリー",
+    "related": "おすすめの組み合わせ",
+    "outOfStock": "売り切れ"
+  },
+  "footer": {
+    "rights": "全著作権所有",
+    "hours": "営業時間",
+    "contact": "お問い合わせ"
+  },
+  "theme": {
+    "day": "昼",
+    "night": "夜"
+  }
+}
