@@ -2,9 +2,10 @@
 
 import { motion, type TargetAndTransition } from "framer-motion";
 import { Link } from "@/i18n/navigation";
-import type { MockProduct } from "@/lib/mock-data";
+import { localizedName, resolveImageUrl } from "@/lib/api";
+import type { AnimationPreset, Locale, Product } from "@/lib/types";
 
-const PLATE_EMOJI: Record<MockProduct["category"], string> = {
+const PLATE_EMOJI: Record<string, string> = {
   nigiri: "🍣",
   maki: "🍙",
   sashimi: "🐟",
@@ -13,7 +14,7 @@ const PLATE_EMOJI: Record<MockProduct["category"], string> = {
 };
 
 /** Per-animation hover behavior — each named preset feels distinct, not a copy-paste variant. */
-const HOVER_VARIANTS: Record<MockProduct["animation"], TargetAndTransition> = {
+const HOVER_VARIANTS: Record<AnimationPreset, TargetAndTransition> = {
   float: { y: -10, rotate: -2, transition: { type: "spring", stiffness: 220, damping: 12 } },
   steam: { y: -6, scale: 1.03, transition: { duration: 0.4 } },
   wave: { rotate: [0, -3, 3, -2, 0], transition: { duration: 0.6 } },
@@ -24,13 +25,16 @@ const HOVER_VARIANTS: Record<MockProduct["animation"], TargetAndTransition> = {
 export function ProductCard({
   product,
   locale,
+  categorySlug,
   currency = "تومان",
 }: {
-  product: MockProduct;
-  locale: "fa" | "en" | "ja";
+  product: Product;
+  locale: Locale;
+  categorySlug?: string;
   currency?: string;
 }) {
-  const name = product.name[locale];
+  const name = localizedName(product, locale);
+  const cover = product.images[0] ? resolveImageUrl(product.images[0]) : undefined;
 
   return (
     <Link href={{ pathname: "/products/[slug]", params: { slug: product.slug } }}>
@@ -48,14 +52,25 @@ export function ProductCard({
           />
         )}
 
-        <div className="relative flex h-36 items-center justify-center text-6xl">
-          {product.animation === "steam" && (
-            <span className="absolute -top-3 left-1/2 h-10 w-8 -translate-x-1/2 rounded-full opacity-0 blur-md transition-all duration-700 group-hover:-translate-y-4 group-hover:opacity-30" style={{ background: "var(--ink-soft)" }} aria-hidden />
+        <div className="relative flex h-36 items-center justify-center overflow-hidden rounded-[var(--radius-md)] text-6xl">
+          {cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={cover} alt={name} className="h-full w-full object-cover" />
+          ) : (
+            <>
+              {product.animation === "steam" && (
+                <span
+                  className="absolute -top-3 left-1/2 h-10 w-8 -translate-x-1/2 rounded-full opacity-0 blur-md transition-all duration-700 group-hover:-translate-y-4 group-hover:opacity-30"
+                  style={{ background: "var(--ink-soft)" }}
+                  aria-hidden
+                />
+              )}
+              <span className="relative">{PLATE_EMOJI[categorySlug ?? ""] ?? "🍣"}</span>
+            </>
           )}
-          <span className="relative">{PLATE_EMOJI[product.category]}</span>
         </div>
 
-        {product.spicy && (
+        {product.is_spicy && (
           <span
             className="absolute top-4 rtl:left-4 ltr:right-4 rounded-full px-2 py-0.5 text-xs font-medium"
             style={{ background: "var(--accent-soft)", color: "var(--accent)" }}
@@ -68,7 +83,7 @@ export function ProductCard({
           {name}
         </h3>
         <p className="mt-1 font-mono text-sm" style={{ color: "var(--accent)" }}>
-          {product.price.toLocaleString("fa-IR")} {currency}
+          {product.price_toman.toLocaleString("fa-IR")} {currency}
         </p>
       </motion.article>
     </Link>

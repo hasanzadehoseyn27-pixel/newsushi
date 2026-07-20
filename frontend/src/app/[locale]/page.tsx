@@ -1,10 +1,11 @@
 import { useTranslations } from "next-intl";
-import { setRequestLocale, getLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Starfield } from "@/components/three/starfield";
 import { ProductCard } from "@/components/product/product-card";
-import { MOCK_PRODUCTS } from "@/lib/mock-data";
+import { getCategories, getProducts, localizedCategoryName } from "@/lib/api";
+import type { Category, Locale, Product } from "@/lib/types";
 
 export default async function HomePage({
   params,
@@ -14,20 +15,23 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <HomeContent locale={locale as "fa" | "en" | "ja"} />;
+  const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+
+  return <HomeContent locale={locale as Locale} products={products} categories={categories} />;
 }
 
-function HomeContent({ locale }: { locale: "fa" | "en" | "ja" }) {
+function HomeContent({
+  locale,
+  products,
+  categories,
+}: {
+  locale: Locale;
+  products: Product[];
+  categories: Category[];
+}) {
   const t = useTranslations("hero");
-  const tc = useTranslations("categories");
 
-  const categories: Array<{ key: string; label: string }> = [
-    { key: "nigiri", label: tc("nigiri") },
-    { key: "maki", label: tc("maki") },
-    { key: "sashimi", label: tc("sashimi") },
-    { key: "temaki", label: tc("temaki") },
-    { key: "special", label: tc("special") },
-  ];
+  const categoryBySlugId = new Map(categories.map((c) => [c.id, c.slug]));
 
   return (
     <>
@@ -73,11 +77,11 @@ function HomeContent({ locale }: { locale: "fa" | "en" | "ja" }) {
         >
           {categories.map((cat) => (
             <span
-              key={cat.key}
+              key={cat.slug}
               className="shrink-0 rounded-full px-4 py-2 text-sm"
               style={{ background: "var(--surface-2)", color: "var(--ink)" }}
             >
-              {cat.label}
+              {localizedCategoryName(cat, locale)}
             </span>
           ))}
         </div>
@@ -85,8 +89,13 @@ function HomeContent({ locale }: { locale: "fa" | "en" | "ja" }) {
 
       <section className="px-6 py-10">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.slug} product={product} locale={locale} />
+          {products.map((product) => (
+            <ProductCard
+              key={product.slug}
+              product={product}
+              locale={locale}
+              categorySlug={categoryBySlugId.get(product.category_id)}
+            />
           ))}
         </div>
       </section>
