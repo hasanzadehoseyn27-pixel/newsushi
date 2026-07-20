@@ -85,6 +85,33 @@ export function resolveImageUrl(path: string): string {
   return `${API_URL}${path}`;
 }
 
+export interface OrderItemInput {
+  slug: string;
+  name: string;
+  price: number;
+  qty: number;
+}
+
+export async function createOrder(payload: {
+  customer_name: string;
+  phone: string;
+  address: string;
+  notes: string;
+  items: OrderItemInput[];
+}): Promise<{ id: number } | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export function localizedName(product: Product, locale: Locale): string {
   return product[`name_${locale}`];
 }

@@ -22,6 +22,11 @@ export const routing = defineRouting({
       en: "/cart",
       ja: "/cart",
     },
+    "/checkout": {
+      fa: "/tasviye-hesab",
+      en: "/checkout",
+      ja: "/checkout",
+    },
   },
 });
 

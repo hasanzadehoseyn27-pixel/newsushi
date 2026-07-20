@@ -1,5 +1,6 @@
 from app.models.admin_user import AdminUser
 from app.models.category import Category
+from app.models.order import Order, OrderStatus
 from app.models.product import AnimationPreset, Product
 from app.models.site_settings import AccentTheme, SiteSettings
 
@@ -10,4 +11,6 @@ __all__ = [
     "AnimationPreset",
     "SiteSettings",
     "AccentTheme",
+    "Order",
+    "OrderStatus",
 ]

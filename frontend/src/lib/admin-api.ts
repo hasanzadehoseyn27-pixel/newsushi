@@ -1,5 +1,5 @@
 import { useAdminAuthStore } from "@/lib/admin-auth-store";
-import type { AccentTheme, Category, Product } from "@/lib/types";
+import type { AccentTheme, Category, Order, OrderStatus, Product } from "@/lib/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -114,6 +114,17 @@ export async function adminUploadImage(file: File): Promise<string> {
   }
   const data = await res.json();
   return data.url as string;
+}
+
+// --- orders ---
+export async function adminListOrders() {
+  return adminFetch<Order[]>("/api/orders");
+}
+export async function adminUpdateOrderStatus(id: number, status: OrderStatus) {
+  return adminFetch<Order>(`/api/orders/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
 }
 
 // --- settings ---

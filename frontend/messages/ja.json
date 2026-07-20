@@ -37,7 +37,21 @@
     "currency": "トマン",
     "remove": "削除",
     "clear": "カートを空にする",
-    "total": "合計"
+    "total": "合計",
+    "checkout": "レジに進む"
+  },
+  "checkout": {
+    "title": "注文を確定する",
+    "name": "お名前",
+    "phone": "電話番号",
+    "address": "配送先住所",
+    "notes": "備考（任意）",
+    "submit": "注文を確定する",
+    "submitting": "送信中...",
+    "success": "ご注文ありがとうございます！まもなくご連絡いたします。",
+    "backToShop": "ショップに戻る",
+    "emptyCart": "カートは空です。",
+    "orderSummary": "注文内容"
   },
   "footer": {
     "rights": "全著作権所有",

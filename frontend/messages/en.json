@@ -37,7 +37,21 @@
     "currency": "Toman",
     "remove": "Remove",
     "clear": "Clear cart",
-    "total": "Total"
+    "total": "Total",
+    "checkout": "Checkout"
+  },
+  "checkout": {
+    "title": "Complete your order",
+    "name": "Full name",
+    "phone": "Phone number",
+    "address": "Delivery address",
+    "notes": "Order notes (optional)",
+    "submit": "Place order",
+    "submitting": "Submitting...",
+    "success": "Your order was placed successfully! We'll contact you soon.",
+    "backToShop": "Back to shop",
+    "emptyCart": "Your cart is empty.",
+    "orderSummary": "Order summary"
   },
   "footer": {
     "rights": "All rights reserved",

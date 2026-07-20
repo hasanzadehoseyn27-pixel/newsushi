@@ -33,4 +33,25 @@ export interface Product {
   updated_at: string;
 }
 
+export type OrderStatus = "pending" | "confirmed" | "delivered" | "cancelled";
+
+export interface OrderItem {
+  slug: string;
+  name: string;
+  price: number;
+  qty: number;
+}
+
+export interface Order {
+  id: number;
+  customer_name: string;
+  phone: string;
+  address: string;
+  notes: string;
+  items: OrderItem[];
+  total_toman: number;
+  status: OrderStatus;
+  created_at: string;
+}
+
 export type Locale = "fa" | "en" | "ja";

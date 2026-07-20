@@ -7,6 +7,7 @@ import { useAdminAuthStore } from "@/lib/admin-auth-store";
 const NAV_ITEMS = [
   { href: "/admin/products", label: "محصولات", icon: "🍣" },
   { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "📂" },
+  { href: "/admin/orders", label: "سفارشات", icon: "🧾" },
   { href: "/admin/theme", label: "تم رنگی سایت", icon: "🎨" },
 ];
 

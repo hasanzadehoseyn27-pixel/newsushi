@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app import models  # noqa: F401  (ensures all tables register on Base.metadata)
-from app.api.routes import auth, categories, products, settings as settings_routes
+from app.api.routes import auth, categories, orders, products, settings as settings_routes
 from app.api.routes import upload
 from app.core.config import get_settings
 from app.db.base import Base
@@ -38,6 +38,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth.router)
 app.include_router(categories.router)
 app.include_router(products.router)
+app.include_router(orders.router)
 app.include_router(settings_routes.router)
 app.include_router(upload.router)
 

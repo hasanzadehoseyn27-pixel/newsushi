@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { Link } from "@/i18n/navigation";
 import { useCartStore } from "@/lib/cart-store";
 
 export default function CartPage() {
@@ -87,7 +88,7 @@ export default function CartPage() {
               <button
                 type="button"
                 onClick={clear}
-                className="cursor-pointer text-sm underline"
+                className="text-sm underline"
                 style={{ color: "var(--ink-soft)" }}
               >
                 {t("clear")}
@@ -96,6 +97,14 @@ export default function CartPage() {
                 {t("total")}: {total().toLocaleString("fa-IR")} {t("currency")}
               </p>
             </div>
+
+            <Link
+              href="/checkout"
+              className="mt-6 block w-full rounded-full py-3 text-center text-sm font-medium"
+              style={{ background: "var(--accent)", color: "var(--accent-ink)" }}
+            >
+              {t("checkout")}
+            </Link>
           </>
         )}
       </main>
