@@ -15,40 +15,57 @@
   --radius-md: 1rem;
   --radius-sm: 0.6rem;
 
-  /* Day (light) surfaces — warm washi paper, not pure white */
-  --bg: #f7f2e7;
-  --bg-elevated: #fffdf8;
+  /* Day surfaces — rice white with lacquer-red geometry and charcoal contrast */
+  --bg: #f4f6f7;
+  --bg-elevated: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f0e9d8;
-  --ink: #201a12;
-  --ink-soft: #5c5347;
-  --line: rgba(32, 26, 18, 0.1);
+  --surface-2: #eceff1;
+  --ink: #14191f;
+  --ink-soft: #52606a;
+  --line: rgba(18, 24, 31, 0.12);
+  --lacquer-black: #121820;
+  --lacquer-red-deep: #830505;
+  --lacquer-red: #c90010;
+  --lacquer-red-hot: #ff2736;
+  --rice-white: #fffaf6;
+  --steel: #6e7d86;
 }
 
 .dark {
-  /* Night (dark) surfaces — deep indigo-black, not pure black */
-  --bg: #0a0d16;
-  --bg-elevated: #10131f;
-  --surface: #131826;
-  --surface-2: #1a2032;
-  --ink: #f3f0e6;
-  --ink-soft: #a8a49a;
-  --line: rgba(243, 240, 230, 0.09);
+  /* Night surfaces — deep charcoal with red lacquer cuts */
+  --bg: #080b10;
+  --bg-elevated: #10151c;
+  --surface: #141a22;
+  --surface-2: #1f2730;
+  --ink: #fff8f3;
+  --ink-soft: #bac3c9;
+  --line: rgba(255, 255, 255, 0.12);
+  --lacquer-black: #07090d;
+  --lacquer-red-deep: #720000;
+  --lacquer-red: #d50012;
+  --lacquer-red-hot: #ff3644;
+  --rice-white: #fffaf6;
+  --steel: #7f8b92;
 }
 
 /* ----------------------- Accent themes (5) ------------------------ */
 /* Ai — indigo tide */
-:root,
 [data-accent="ai"] {
   --accent: #2e5eaa;
   --accent-2: #6fb1fc;
   --accent-ink: #ffffff;
   --accent-soft: #e3edfb;
+  --lacquer-red-deep: #163c78;
+  --lacquer-red: #2e5eaa;
+  --lacquer-red-hot: #6fb1fc;
 }
 .dark[data-accent="ai"] {
   --accent: #6fa8ff;
   --accent-2: #2e5eaa;
   --accent-soft: #16233f;
+  --lacquer-red-deep: #0f2750;
+  --lacquer-red: #2e5eaa;
+  --lacquer-red-hot: #6fa8ff;
 }
 
 /* Wasabi — matcha green */
@@ -57,24 +74,37 @@
   --accent-2: #96cf6d;
   --accent-ink: #ffffff;
   --accent-soft: #e6f1de;
+  --lacquer-red-deep: #294b22;
+  --lacquer-red: #4c7a3d;
+  --lacquer-red-hot: #96cf6d;
 }
 .dark[data-accent="wasabi"] {
   --accent: #8fd66a;
   --accent-2: #4c7a3d;
   --accent-soft: #172619;
+  --lacquer-red-deep: #193016;
+  --lacquer-red: #4c7a3d;
+  --lacquer-red-hot: #8fd66a;
 }
 
 /* Akane — madder red */
+:root,
 [data-accent="akane"] {
-  --accent: #c1432a;
-  --accent-2: #ff8066;
+  --accent: #d50012;
+  --accent-2: #ff3644;
   --accent-ink: #ffffff;
-  --accent-soft: #fbe4de;
+  --accent-soft: #ffe3e4;
+  --lacquer-red-deep: #830505;
+  --lacquer-red: #d50012;
+  --lacquer-red-hot: #ff3644;
 }
 .dark[data-accent="akane"] {
-  --accent: #ff6f59;
-  --accent-2: #c1432a;
-  --accent-soft: #2a1512;
+  --accent: #ff3644;
+  --accent-2: #d50012;
+  --accent-soft: #351014;
+  --lacquer-red-deep: #720000;
+  --lacquer-red: #d50012;
+  --lacquer-red-hot: #ff3644;
 }
 
 /* Yuzu — citrus gold */
@@ -83,12 +113,18 @@
   --accent-2: #ffd873;
   --accent-ink: #241a02;
   --accent-soft: #fbf0d6;
+  --lacquer-red-deep: #785312;
+  --lacquer-red: #c99423;
+  --lacquer-red-hot: #ffd873;
 }
 .dark[data-accent="yuzu"] {
   --accent: #ffd873;
   --accent-2: #c99423;
   --accent-ink: #241a02;
   --accent-soft: #2a2410;
+  --lacquer-red-deep: #5e3d08;
+  --lacquer-red: #c99423;
+  --lacquer-red-hot: #ffd873;
 }
 
 /* Murasaki — shiso purple */
@@ -97,11 +133,17 @@
   --accent-2: #b185db;
   --accent-ink: #ffffff;
   --accent-soft: #ece2f7;
+  --lacquer-red-deep: #3e2a60;
+  --lacquer-red: #6a4c93;
+  --lacquer-red-hot: #b185db;
 }
 .dark[data-accent="murasaki"] {
   --accent: #b185db;
   --accent-2: #6a4c93;
   --accent-soft: #211a2c;
+  --lacquer-red-deep: #281d3e;
+  --lacquer-red: #6a4c93;
+  --lacquer-red-hot: #b185db;
 }
 
 @theme inline {
@@ -137,15 +179,129 @@ html.dark {
 }
 
 body {
-  background: var(--bg);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--bg) 88%, var(--lacquer-red) 12%), var(--bg) 46%),
+    var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
+  overflow-x: hidden;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 ::selection {
   background: var(--accent);
   color: var(--accent-ink);
+}
+
+@keyframes dream-drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.62;
+  }
+  50% {
+    transform: translate3d(var(--dream-x, 24px), -42px, 0) rotate(9deg);
+  }
+  100% {
+    transform: translate3d(calc(var(--dream-x, 24px) * -1), -96px, 0) rotate(-12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes card-shine {
+  0% {
+    transform: translateX(-150%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(180%) skewX(-18deg);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+
+.dream-motif {
+  animation: dream-drift var(--dream-duration, 9s) ease-in-out infinite;
+  animation-delay: var(--dream-delay, 0s);
+}
+
+.dream-card-shine {
+  animation: card-shine 1.2s ease forwards;
+}
+
+.soft-pulse {
+  animation: soft-pulse 3.2s ease-in-out infinite;
+}
+
+.lacquer-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(126deg, rgba(255, 255, 255, 0.96) 0 31%, transparent 31.4%),
+    linear-gradient(127deg, transparent 0 37%, color-mix(in srgb, var(--lacquer-red) 92%, #000 8%) 37.4% 61%, transparent 61.4%),
+    linear-gradient(132deg, color-mix(in srgb, var(--lacquer-black) 96%, var(--lacquer-red)) 0 100%);
+}
+
+.lacquer-panel::before,
+.lacquer-panel::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.lacquer-panel::before {
+  background:
+    linear-gradient(118deg, transparent 0 42%, rgba(255, 255, 255, 0.28) 42.4% 45%, transparent 45.4%),
+    linear-gradient(145deg, transparent 0 54%, rgba(255, 54, 68, 0.44) 54.4% 62%, transparent 62.4%);
+  transform: translate3d(calc((var(--mx, 0.5) - 0.5) * 38px), calc((var(--my, 0.5) - 0.5) * 26px), 0);
+  transition: transform 0.14s ease-out;
+}
+
+.lacquer-panel::after {
+  background:
+    linear-gradient(35deg, transparent 0 60%, rgba(255, 255, 255, 0.18) 60.4% 63%, transparent 63.4%),
+    radial-gradient(circle at calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%), rgba(255, 255, 255, 0.32), transparent 22%);
+  mix-blend-mode: screen;
+}
+
+.redline-frame {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent),
+    0 24px 80px rgba(35, 7, 7, 0.18);
+}
+
+.sushi-cut-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at calc(var(--mx, 0.45) * 100%) calc(var(--my, 0.35) * 100%), color-mix(in srgb, var(--accent-soft) 72%, transparent), transparent 34%),
+    linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 86%, var(--surface-2)));
+}
+
+.sushi-cut-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at calc(var(--mx, 0.45) * 100%) calc(var(--my, 0.35) * 100%), color-mix(in srgb, var(--accent) 13%, transparent), transparent 28%);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 /* Every clickable element should show a pointer cursor, regardless of component-level styling. */

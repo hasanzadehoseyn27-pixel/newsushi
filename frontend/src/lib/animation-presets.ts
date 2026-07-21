@@ -11,7 +11,7 @@ export const ANIMATION_PRESETS: { value: AnimationPreset; label: string; hint: s
 export const ACCENT_LABELS: { value: string; label: string; hex: string }[] = [
   { value: "ai", label: "آی — نیلی", hex: "#2e5eaa" },
   { value: "wasabi", label: "واسابی — سبز", hex: "#4c7a3d" },
-  { value: "akane", label: "آکانه — قرمز", hex: "#c1432a" },
+  { value: "akane", label: "آکانه — قرمز شیک", hex: "#b83228" },
   { value: "yuzu", label: "یوزو — طلایی", hex: "#c99423" },
   { value: "murasaki", label: "موراساکی — بنفش", hex: "#6a4c93" },
 ];

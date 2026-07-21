@@ -41,11 +41,12 @@ export function Product3DSlider({ images, fallbackEmoji = "🍣", alt }: Product
           const isFar = abs > 2;
 
           return (
-            <motion.button
+            <motion.div
               key={i}
-              type="button"
-              aria-label={`slide-${i}`}
               onClick={() => setActive(i)}
+              role="button"
+              tabIndex={0}
+              aria-label={`slide-${i}`}
               className="absolute h-56 w-56 shrink-0 overflow-hidden rounded-[var(--radius-lg)] border shadow-xl sm:h-80 sm:w-80"
               style={{
                 borderColor: "var(--line)",
@@ -63,18 +64,23 @@ export function Product3DSlider({ images, fallbackEmoji = "🍣", alt }: Product
             >
               {typeof src === "string" ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={src} alt={`${alt} ${i + 1}`} className="h-full w-full object-cover" draggable={false} />
+                <img
+                  src={src}
+                  alt={`${alt} ${i + 1}`}
+                  className="h-full w-full bg-black object-contain p-4"
+                  draggable={false}
+                />
               ) : (
                 <div
                   className="flex h-full w-full items-center justify-center text-7xl"
                   style={{
-                    background: `linear-gradient(135deg, var(--accent-soft), var(--surface-2))`,
+                    background: "radial-gradient(circle at 50% 45%, var(--accent-soft), var(--surface) 64%)",
                   }}
                 >
                   {fallbackEmoji}
                 </div>
               )}
-            </motion.button>
+            </motion.div>
           );
         })}
       </div>

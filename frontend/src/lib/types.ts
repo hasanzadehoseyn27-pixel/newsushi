@@ -28,6 +28,7 @@ export interface Product {
   is_available: boolean;
   animation: AnimationPreset;
   images: string[];
+  audio_url: string;
   sort_order: number;
   created_at: string;
   updated_at: string;

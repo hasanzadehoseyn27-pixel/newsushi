@@ -9,7 +9,9 @@ export function DayNightToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const t = useTranslations("theme");
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    queueMicrotask(() => setMounted(true));
+  }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
 

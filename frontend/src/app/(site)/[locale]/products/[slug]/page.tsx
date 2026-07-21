@@ -4,7 +4,10 @@ import { useTranslations } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { Starfield } from "@/components/three/starfield";
 import { Product3DSlider } from "@/components/product/product-slider-3d";
+import { FloatingProductBites } from "@/components/product/floating-product-bites";
+import { ProductAudioPlayer } from "@/components/product/product-audio-player";
 import { AddToCartButton } from "@/components/product/add-to-cart-button";
 import { ProductCard } from "@/components/product/product-card";
 import {
@@ -71,6 +74,13 @@ export default async function ProductPage({
   const description = localizedDescription(product, locale as Locale);
   const ingredients = localizedIngredients(product, locale as Locale);
   const images = product.images.map(resolveImageUrl);
+  const audio = product.audio_url ? resolveImageUrl(product.audio_url) : "";
+  const audioTitle =
+    {
+      fa: "توضیحات محصول",
+      en: "Product description",
+      ja: "商品説明",
+    }[locale as Locale] ?? "Product description";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -90,15 +100,20 @@ export default async function ProductPage({
 
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-script-component-in-head */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
 
-      <main className="px-6 py-10">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
+      <main className="relative overflow-hidden px-6 py-10">
+        <Starfield soft />
+        <FloatingProductBites
+          images={images}
+          alt={name}
+          fallbackEmoji={CATEGORY_EMOJI[category?.slug ?? ""] ?? "🍣"}
+        />
+        <div className="relative z-10 mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
           <div
             className="rounded-[var(--radius-lg)] border p-6"
             style={{ borderColor: "var(--line)", background: "var(--surface)" }}
@@ -130,6 +145,8 @@ export default async function ProductPage({
                 {description}
               </p>
             )}
+
+            {audio && <ProductAudioPlayer src={audio} title={audioTitle} locale={locale as Locale} />}
 
             {ingredients.length > 0 && (
               <div className="mt-6">
@@ -195,7 +212,7 @@ function RelatedSection({
 }) {
   const t = useTranslations("product");
   return (
-    <section className="mx-auto mt-16 max-w-6xl">
+    <section className="relative z-10 mx-auto mt-16 max-w-6xl">
       <h2 className="font-display text-xl" style={{ color: "var(--ink)" }}>
         {t("related")}
       </h2>

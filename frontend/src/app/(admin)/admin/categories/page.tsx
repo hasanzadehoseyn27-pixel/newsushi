@@ -7,8 +7,10 @@ import {
   adminCreateCategory,
   adminDeleteCategory,
   adminListCategories,
+  adminTranslateFromPersian,
   AdminApiError,
 } from "@/lib/admin-api";
+import { slugifyPersian } from "@/lib/transliteration";
 import type { Category } from "@/lib/types";
 
 export default function AdminCategoriesPage() {
@@ -28,6 +30,7 @@ function CategoriesManager() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({ slug: "", name_fa: "", name_en: "", name_ja: "" });
   const [saving, setSaving] = useState(false);
+  const [translating, setTranslating] = useState(false);
 
   const load = () => adminListCategories().then(setCategories);
 
@@ -54,6 +57,28 @@ function CategoriesManager() {
     if (!confirm("این دسته‌بندی حذف شود؟ (محصولات وابسته هم حذف می‌شوند)")) return;
     await adminDeleteCategory(id);
     load();
+  };
+
+  const fillTranslations = async () => {
+    if (!form.name_fa.trim()) return;
+    setTranslating(true);
+    setError("");
+    try {
+      const [en, ja] = await Promise.all([
+        adminTranslateFromPersian(form.name_fa, "en"),
+        adminTranslateFromPersian(form.name_fa, "ja"),
+      ]);
+      setForm({
+        ...form,
+        slug: form.slug || slugifyPersian(form.name_fa),
+        name_en: en || form.name_en,
+        name_ja: ja || form.name_ja,
+      });
+    } catch (err) {
+      setError(err instanceof AdminApiError ? err.message : "ترجمه گوگل انجام نشد");
+    } finally {
+      setTranslating(false);
+    }
   };
 
   return (
@@ -91,6 +116,15 @@ function CategoriesManager() {
         <input placeholder="فارسی" value={form.name_fa} onChange={(e) => setForm({ ...form, name_fa: e.target.value })} required className="rounded-lg border px-3 py-2 text-sm outline-none" style={inputStyle} />
         <input placeholder="English" value={form.name_en} onChange={(e) => setForm({ ...form, name_en: e.target.value })} required className="rounded-lg border px-3 py-2 text-sm outline-none" style={inputStyle} />
         <input placeholder="日本語" value={form.name_ja} onChange={(e) => setForm({ ...form, name_ja: e.target.value })} required className="rounded-lg border px-3 py-2 text-sm outline-none" style={inputStyle} />
+        <button
+          type="button"
+          disabled={!form.name_fa.trim() || translating}
+          onClick={fillTranslations}
+          className="col-span-2 rounded-full border px-5 py-2 text-sm font-medium disabled:opacity-45 sm:col-span-4"
+          style={{ borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-soft)" }}
+        >
+          {translating ? "در حال ترجمه..." : "ترجمه با Google Translate"}
+        </button>
         <button
           type="submit"
           disabled={saving}

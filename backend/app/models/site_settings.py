@@ -24,7 +24,7 @@ class SiteSettings(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
     accent_theme: Mapped[AccentTheme] = mapped_column(
-        SAEnum(AccentTheme, name="accent_theme"), default=AccentTheme.AI
+        SAEnum(AccentTheme, name="accent_theme"), default=AccentTheme.AKANE
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

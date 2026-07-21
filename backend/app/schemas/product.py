@@ -26,6 +26,7 @@ class ProductBase(BaseModel):
     is_available: bool = True
     animation: AnimationPreset = AnimationPreset.FLOAT
     images: list[str] = []
+    audio_url: str = ""
     sort_order: int = 0
 
 
@@ -50,6 +51,7 @@ class ProductUpdate(BaseModel):
     is_available: bool | None = None
     animation: AnimationPreset | None = None
     images: list[str] | None = None
+    audio_url: str | None = None
     sort_order: int | None = None
 
 

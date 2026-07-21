@@ -26,10 +26,13 @@ export function ProductBrowser({
   return (
     <>
       {/* Category rail — styled like a kaiten-zushi conveyor belt */}
-      <section className="px-6 py-4">
+      <section id="menu" className="scroll-mt-24 px-6 py-4">
         <div
-          className="mx-auto flex max-w-6xl gap-2.5 overflow-x-auto rounded-full border p-2"
-          style={{ borderColor: "var(--line)", background: "var(--surface)" }}
+          className="mx-auto flex max-w-6xl gap-2.5 overflow-x-auto rounded-full border p-2 shadow-[0_14px_34px_rgba(10,14,20,0.07)]"
+          style={{
+            borderColor: "var(--line)",
+            background: "color-mix(in srgb, var(--surface) 94%, var(--accent-soft))",
+          }}
         >
           <CategoryPill
             label={locale === "fa" ? "همه" : locale === "ja" ? "すべて" : "All"}
@@ -78,7 +81,7 @@ function CategoryPill({
       onClick={onClick}
       whileHover={{ scale: 1.06, y: -2 }}
       whileTap={{ scale: 0.95 }}
-      className="relative shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-[var(--surface-2)]"
+      className="relative shrink-0 rounded-full px-4 py-2 text-sm font-bold transition-colors hover:bg-[var(--surface-2)]"
       style={{ color: selected ? "var(--accent-ink)" : "var(--ink)" }}
     >
       {selected && (

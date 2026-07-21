@@ -30,6 +30,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <div className="mb-8 font-display text-lg" style={{ fontFamily: "var(--font-vazirmatn)" }}>
           🍣 پنل NewSushi
         </div>
+        <Link
+          href="/fa"
+          className="mb-4 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"
+          style={{ borderColor: "var(--line)", color: "var(--ink-soft)" }}
+        >
+          <span>⌂</span>
+          صفحه اصلی
+        </Link>
         <nav className="flex flex-1 flex-col gap-1">
           {NAV_ITEMS.map((item) => {
             const active = pathname?.startsWith(item.href);

@@ -37,7 +37,7 @@ function ProductsList() {
   };
 
   useEffect(() => {
-    load();
+    queueMicrotask(load);
   }, []);
 
   const handleDelete = async (id: number) => {

@@ -109,7 +109,7 @@ async def seed() -> None:
         # --- site settings ---
         result = await db.execute(select(SiteSettings).where(SiteSettings.id == 1))
         if not result.scalar_one_or_none():
-            db.add(SiteSettings(id=1, accent_theme=AccentTheme.AI))
+            db.add(SiteSettings(id=1, accent_theme=AccentTheme.AKANE))
 
         await db.commit()
 

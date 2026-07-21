@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fa" dir="rtl" data-accent="ai" suppressHydrationWarning>
+    <html lang="fa" dir="rtl" data-accent="akane" suppressHydrationWarning>
       <body className={vazirmatn.variable}>
         <DayNightProvider>{children}</DayNightProvider>
       </body>

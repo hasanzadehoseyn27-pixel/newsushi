@@ -26,6 +26,7 @@ function mockToProduct(mock: (typeof MOCK_PRODUCTS)[number], id: number): Produc
     is_available: true,
     animation: mock.animation,
     images: [],
+    audio_url: "",
     sort_order: id,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

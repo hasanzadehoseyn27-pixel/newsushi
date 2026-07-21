@@ -5,6 +5,7 @@ import { AdminGuard } from "@/components/admin/admin-guard";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { adminGetSettings, adminUpdateSettings, AdminApiError } from "@/lib/admin-api";
 import { ACCENT_LABELS } from "@/lib/animation-presets";
+import { useAccentStore } from "@/lib/theme/accent-store";
 import type { AccentTheme } from "@/lib/types";
 
 export default function AdminThemePage() {
@@ -21,17 +22,24 @@ function ThemePicker() {
   const [current, setCurrent] = useState<AccentTheme | null>(null);
   const [saving, setSaving] = useState<AccentTheme | null>(null);
   const [error, setError] = useState("");
+  const setAccent = useAccentStore((s) => s.setAccent);
 
   useEffect(() => {
-    adminGetSettings().then((s) => setCurrent(s.accent_theme));
-  }, []);
+    adminGetSettings().then((s) => {
+      setCurrent(s.accent_theme);
+      setAccent(s.accent_theme);
+    });
+  }, [setAccent]);
 
   const handleSelect = async (accent: AccentTheme) => {
     setSaving(accent);
     setError("");
+    setCurrent(accent);
+    setAccent(accent);
     try {
       const res = await adminUpdateSettings(accent);
       setCurrent(res.accent_theme);
+      setAccent(res.accent_theme);
     } catch (err) {
       setError(err instanceof AdminApiError ? err.message : "خطا در ذخیره");
     } finally {
@@ -45,7 +53,7 @@ function ThemePicker() {
         تم رنگی سایت
       </h1>
       <p className="mt-2 text-sm" style={{ color: "var(--ink-soft)" }}>
-        رنگ غالب کل فروشگاه رو از اینجا عوض کن. مشتری‌ها بعد از رفرش صفحه، رنگ جدید رو می‌بینن.
+        رنگ غالب کل فروشگاه رو از اینجا عوض کن. همین لحظه روی پنل اعمال می‌شود و برای مشتری‌ها هم ذخیره می‌شود.
       </p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-5">

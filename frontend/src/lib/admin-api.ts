@@ -116,6 +116,64 @@ export async function adminUploadImage(file: File): Promise<string> {
   return data.url as string;
 }
 
+export async function adminUploadAudio(file: File): Promise<string> {
+  const token = useAdminAuthStore.getState().token;
+  const makeForm = () => {
+    const form = new FormData();
+    form.append("file", file);
+    return form;
+  };
+
+  let res = await fetch(`${API_URL}/api/uploads/audio`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: makeForm(),
+  }).catch(() => null);
+
+  if (!res?.ok) {
+    res = await fetch("/api/uploads/audio", {
+      method: "POST",
+      body: makeForm(),
+    });
+  }
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new AdminApiError(body.detail ?? "آپلود صوت ناموفق بود", res.status);
+  }
+  const data = await res.json();
+  return data.url as string;
+}
+
+export async function adminTranslateFromPersian(text: string, target: "en" | "ja"): Promise<string> {
+  const payload = JSON.stringify({ text, source: "fa", target });
+
+  try {
+    const data = await adminFetch<{ text: string }>("/api/translate", {
+      method: "POST",
+      body: payload,
+    });
+    if (data.text) return data.text;
+  } catch {
+    // Fall through to the frontend proxy. This keeps translation working even if
+    // the FastAPI dev server has not been restarted after adding /api/translate.
+  }
+
+  const res = await fetch("/api/translate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: payload,
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new AdminApiError(body.detail ?? "ترجمه گوگل انجام نشد", res.status);
+  }
+
+  const data = (await res.json()) as { text: string };
+  return data.text;
+}
+
 // --- orders ---
 export async function adminListOrders() {
   return adminFetch<Order[]>("/api/orders");
