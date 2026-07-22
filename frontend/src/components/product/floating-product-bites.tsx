@@ -81,36 +81,58 @@ function FloatingBite({
   index: number;
 }) {
   const [burst, setBurst] = useState(0);
+  const [pos, setPos] = useState({ left, top });
+  const [phase, setPhase] = useState<"visible" | "fading" | "hidden">("visible");
+  const isVisible = phase === "visible";
+
+  const respawn = () => {
+    // Random spot away from the very edges so the bite stays fully on screen.
+    const nextLeft = `${4 + Math.random() * 88}%`;
+    const nextTop = `${8 + Math.random() * 80}%`;
+    setPos({ left: nextLeft, top: nextTop });
+  };
+
+  const handleClick = () => {
+    if (!isVisible) return;
+    setBurst((value) => value + 1);
+    setPhase("fading");
+    window.setTimeout(() => {
+      respawn();
+      setPhase("hidden");
+      window.setTimeout(() => setPhase("visible"), 220);
+    }, 800);
+  };
 
   return (
     <motion.button
       type="button"
-      className="pointer-events-auto absolute rounded-full border bg-black/70 p-2 shadow-[0_18px_42px_rgba(0,0,0,0.22)] backdrop-blur-sm"
+      disabled={!isVisible}
+      className="pointer-events-auto absolute rounded-full border bg-black/60 p-2 shadow-[0_18px_42px_rgba(0,0,0,0.16)] backdrop-blur-sm"
       style={{
-        left,
-        top,
+        left: pos.left,
+        top: pos.top,
         width: size,
         height: size,
-        borderColor: "color-mix(in srgb, var(--accent) 52%, transparent)",
+        borderColor: "color-mix(in srgb, var(--accent) 34%, transparent)",
       }}
       initial={{ opacity: 0, scale: 0.6 }}
       animate={{
-        opacity: 0.84,
-        scale: [1, 1.13, 0.96, 1],
-        x: [0, drift, drift * -0.42, 0],
-        y: [0, -28 - (index % 3) * 8, 18, 0],
-        rotate: [0, index % 2 === 0 ? 16 : -16, index % 2 === 0 ? -8 : 8, 0],
+        opacity: isVisible ? 0.5 : 0,
+        scale: isVisible ? [1, 1.13, 0.96, 1] : 0.6,
+        x: isVisible ? [0, drift, drift * -0.42, 0] : 0,
+        y: isVisible ? [0, -28 - (index % 3) * 8, 18, 0] : 0,
+        rotate: isVisible ? [0, index % 2 === 0 ? 16 : -16, index % 2 === 0 ? -8 : 8, 0] : 0,
       }}
-      whileHover={{ scale: 1.22, opacity: 1, zIndex: 50 }}
-      whileTap={{ scale: 0.82, rotate: index % 2 === 0 ? 22 : -22 }}
+      whileHover={isVisible ? { scale: 1.22, opacity: 0.88, zIndex: 50 } : undefined}
+      whileTap={isVisible ? { scale: 0.82, rotate: index % 2 === 0 ? 22 : -22 } : undefined}
       transition={{
-        opacity: { duration: 0.35 },
-        scale: { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay },
-        x: { duration: 5.2, repeat: Infinity, ease: "easeInOut", delay },
-        y: { duration: 4.1, repeat: Infinity, ease: "easeInOut", delay },
-        rotate: { duration: 4.8, repeat: Infinity, ease: "easeInOut", delay },
+        opacity: { duration: phase === "fading" ? 0.55 : 0.5 },
+        scale: { duration: 3.4, repeat: isVisible ? Infinity : 0, ease: "easeInOut", delay },
+        x: { duration: 5.2, repeat: isVisible ? Infinity : 0, ease: "easeInOut", delay },
+        y: { duration: 4.1, repeat: isVisible ? Infinity : 0, ease: "easeInOut", delay },
+        rotate: { duration: 4.8, repeat: isVisible ? Infinity : 0, ease: "easeInOut", delay },
       }}
-      onClick={() => setBurst((value) => value + 1)}
+      onClick={handleClick}
       aria-label={alt}
     >
       {image ? (
@@ -152,7 +174,7 @@ function BiteBurst({
       {vectors.map(([x, y], index) => (
         <motion.span
           key={`${x}-${y}`}
-          className="absolute left-1/2 top-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/70 p-1"
+          className="absolute left-1/2 top-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/55 p-1"
           initial={{ x: "-50%", y: "-50%", opacity: 0, scale: 0.35, rotate: 0 }}
           animate={{
             x,
