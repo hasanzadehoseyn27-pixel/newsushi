@@ -30,8 +30,8 @@ import requests
 WC_URL = "https://sinisushi.com"
 
 # از WooCommerce > تنظیمات > پیشرفته > REST API گرفته می‌شود
-WC_CONSUMER_KEY = "ck_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-WC_CONSUMER_SECRET = "cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+WC_CONSUMER_KEY = "ck_88040088d31b5ce64c72a3f0342c7c95d5078bc9"
+WC_CONSUMER_SECRET = "cs_5a87768b7048827a7702dafb5030ceb699ecbcbe"
 
 # آدرس بک‌اند نیوسوشی که الان روی سیستم خودت روشنه
 NEWSUSHI_API = "http://localhost:8000"
@@ -42,7 +42,7 @@ ADMIN_PASSWORD = "Admin123!"
 PRICE_MULTIPLIER = 1
 
 # اگر True باشد، فقط چاپ می‌کند و چیزی در دیتابیس نمی‌سازد (برای تست اول)
-DRY_RUN = False
+DRY_RUN = True
 
 # اگر می‌خواهی ترجمه انگلیسی/ژاپنی هم انجام شود True بگذار (کندتر است، هر متن چند ثانیه)
 TRANSLATE = True
