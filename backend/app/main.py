@@ -25,6 +25,9 @@ async def lifespan(app: FastAPI):
             await conn.execute(
                 text("ALTER TABLE products ADD COLUMN IF NOT EXISTS audio_url VARCHAR(500) NOT NULL DEFAULT ''")
             )
+            await conn.execute(
+                text("ALTER TABLE products ADD COLUMN IF NOT EXISTS video_url VARCHAR(500) NOT NULL DEFAULT ''")
+            )
     yield
 
 

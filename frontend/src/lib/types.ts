@@ -29,6 +29,7 @@ export interface Product {
   animation: AnimationPreset;
   images: string[];
   audio_url: string;
+  video_url: string;
   sort_order: number;
   created_at: string;
   updated_at: string;

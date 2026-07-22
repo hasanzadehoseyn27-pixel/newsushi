@@ -145,6 +145,35 @@ export async function adminUploadAudio(file: File): Promise<string> {
   return data.url as string;
 }
 
+export async function adminUploadVideo(file: File): Promise<string> {
+  const token = useAdminAuthStore.getState().token;
+  const makeForm = () => {
+    const form = new FormData();
+    form.append("file", file);
+    return form;
+  };
+
+  let res = await fetch(`${API_URL}/api/uploads/video`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: makeForm(),
+  }).catch(() => null);
+
+  if (!res?.ok) {
+    res = await fetch("/api/uploads/video", {
+      method: "POST",
+      body: makeForm(),
+    });
+  }
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new AdminApiError(body.detail ?? "آپلود ویدیو ناموفق بود", res.status);
+  }
+  const data = await res.json();
+  return data.url as string;
+}
+
 export async function adminTranslateFromPersian(text: string, target: "en" | "ja"): Promise<string> {
   const payload = JSON.stringify({ text, source: "fa", target });
 

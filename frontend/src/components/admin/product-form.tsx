@@ -8,6 +8,7 @@ import {
   adminTranslateFromPersian,
   adminUploadAudio,
   adminUploadImage,
+  adminUploadVideo,
   AdminApiError,
   resolveAdminImageUrl,
   type ProductPayload,
@@ -64,6 +65,7 @@ export function ProductForm({
           animation: initial.animation,
           images: initial.images,
           audio_url: initial.audio_url ?? "",
+          video_url: initial.video_url ?? "",
           sort_order: initial.sort_order,
         }
       : {
@@ -84,6 +86,7 @@ export function ProductForm({
           animation: "float",
           images: [],
           audio_url: "",
+          video_url: "",
           sort_order: 0,
         }
   );
@@ -92,6 +95,9 @@ export function ProductForm({
   const [uploadingAudio, setUploadingAudio] = useState(false);
   const [audioFileName, setAudioFileName] = useState("");
   const [audioStatus, setAudioStatus] = useState("");
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [videoFileName, setVideoFileName] = useState("");
+  const [videoStatus, setVideoStatus] = useState("");
   const [recordingAudio, setRecordingAudio] = useState(false);
   const [recordElapsed, setRecordElapsed] = useState(0);
   const [translatingName, setTranslatingName] = useState(false);
@@ -104,6 +110,7 @@ export function ProductForm({
   const chunksRef = useRef<Blob[]>([]);
   const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const latestAudioUrlRef = useRef(initial?.audio_url ?? "");
+  const latestVideoUrlRef = useRef(initial?.video_url ?? "");
 
   useEffect(() => {
     return () => {
@@ -118,6 +125,11 @@ export function ProductForm({
   const updateAudioUrl = (url: string) => {
     latestAudioUrlRef.current = url;
     update("audio_url", url);
+  };
+
+  const updateVideoUrl = (url: string) => {
+    latestVideoUrlRef.current = url;
+    update("video_url", url);
   };
 
   const fillNameTranslations = async () => {
@@ -244,6 +256,66 @@ export function ProductForm({
     }
   };
 
+  const uploadVideoFile = async (file: File) => {
+    setVideoFileName(file.name);
+    setUploadingVideo(true);
+    setError("");
+    try {
+      const url = await adminUploadVideo(file);
+      updateVideoUrl(url);
+      if (isEdit && initial) {
+        const saved = await adminUpdateProduct(initial.id, { video_url: url });
+        if (saved.video_url !== url) {
+          throw new AdminApiError(
+            "بک‌اند هنوز فیلد ویدیو را ذخیره نمی‌کند؛ بک‌اند را stop/start کن تا video_url فعال شود",
+            500
+          );
+        }
+        setVideoStatus("ویدیو آپلود و روی همین محصول ذخیره شد");
+      } else {
+        setVideoStatus("ویدیو آپلود شد؛ برای محصول جدید دکمه افزودن محصول را بزن");
+      }
+    } catch (err) {
+      setError(
+        err instanceof AdminApiError
+          ? `${err.message} - اگر همین الان بک‌اند را ری‌استارت نکردی، یک بار ری‌استارتش کن.`
+          : "خطا در آپلود ویدیو"
+      );
+    } finally {
+      setUploadingVideo(false);
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      await uploadVideoFile(file);
+    } finally {
+      e.target.value = "";
+    }
+  };
+
+  const removeVideo = async () => {
+    try {
+      updateVideoUrl("");
+      setVideoFileName("");
+      setVideoStatus("ویدیو حذف شد؛ با ذخیره تغییرات نهایی می‌شود");
+      if (isEdit && initial) {
+        const saved = await adminUpdateProduct(initial.id, { video_url: "" });
+        if (saved.video_url) {
+          throw new AdminApiError(
+            "بک‌اند هنوز حذف ویدیو را ذخیره نمی‌کند؛ بک‌اند را stop/start کن",
+            500
+          );
+        }
+        setVideoStatus("ویدیو از روی محصول حذف شد");
+      }
+    } catch (err) {
+      setError(err instanceof AdminApiError ? err.message : "حذف ویدیو ذخیره نشد");
+    }
+  };
+
   const startAudioRecording = async () => {
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       setError("مرورگر شما ضبط صدا را پشتیبانی نمی‌کند");
@@ -302,13 +374,17 @@ export function ProductForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (uploadingAudio || recordingAudio) {
-      setError("اول صبر کن آپلود یا ضبط ویس تمام شود، بعد ذخیره کن");
+    if (uploadingAudio || recordingAudio || uploadingVideo) {
+      setError("اول صبر کن آپلود یا ضبط ویس/ویدیو تمام شود، بعد ذخیره کن");
       return;
     }
     setSaving(true);
     setError("");
-    const payload = { ...form, audio_url: latestAudioUrlRef.current };
+    const payload = {
+      ...form,
+      audio_url: latestAudioUrlRef.current,
+      video_url: latestVideoUrlRef.current,
+    };
     try {
       if (isEdit && initial) {
         const saved = await adminUpdateProduct(initial.id, payload);
@@ -318,11 +394,23 @@ export function ProductForm({
             500
           );
         }
+        if (payload.video_url && saved.video_url !== payload.video_url) {
+          throw new AdminApiError(
+            "ویدیو در دیتابیس ذخیره نشد؛ بک‌اند را stop/start کن تا video_url فعال شود",
+            500
+          );
+        }
       } else {
         const saved = await adminCreateProduct(payload);
         if (payload.audio_url && saved.audio_url !== payload.audio_url) {
           throw new AdminApiError(
             "ویس در محصول جدید ذخیره نشد؛ بک‌اند را stop/start کن تا audio_url فعال شود",
+            500
+          );
+        }
+        if (payload.video_url && saved.video_url !== payload.video_url) {
+          throw new AdminApiError(
+            "ویدیو در محصول جدید ذخیره نشد؛ بک‌اند را stop/start کن تا video_url فعال شود",
             500
           );
         }
@@ -616,10 +704,77 @@ export function ProductForm({
         </div>
       </Field>
 
+      <Field label="ویدیو محصول (اختیاری)">
+        <div className="rounded-2xl border p-4" style={{ borderColor: "var(--line)", background: "var(--surface)" }}>
+          {uploadingVideo ? (
+            <div className="overflow-hidden rounded-xl border p-4" style={{ borderColor: "var(--line)" }}>
+              <div className="flex items-center justify-between gap-3 text-sm" style={{ color: "var(--ink)" }}>
+                <span>در حال آپلود ویدیو...</span>
+                <span className="max-w-[60%] truncate text-xs" style={{ color: "var(--ink-soft)" }}>
+                  {videoFileName || "فایل ویدیویی"}
+                </span>
+              </div>
+              <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ background: "var(--line)" }}>
+                <div
+                  className="h-full w-1/2 animate-pulse rounded-full"
+                  style={{ background: "var(--accent)" }}
+                />
+              </div>
+            </div>
+          ) : form.video_url ? (
+            <div className="flex flex-col gap-3">
+              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+              <video
+                controls
+                src={resolveAdminImageUrl(form.video_url)}
+                className="w-full rounded-lg"
+                style={{ maxHeight: 260 }}
+              />
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="break-all text-xs" style={{ color: "var(--ink-soft)" }}>
+                  {videoFileName || form.video_url}
+                </span>
+                <button
+                  type="button"
+                  onClick={removeVideo}
+                  className="rounded-full border px-4 py-2 text-xs"
+                  style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+                >
+                  حذف ویدیو
+                </button>
+              </div>
+            </div>
+          ) : (
+            <label
+              className="flex min-h-24 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-sm transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: "var(--line)", color: "var(--ink-soft)" }}
+            >
+              <span>آپلود ویدیوی محصول</span>
+              <span className="text-xs opacity-70">mp4, webm, mov, ogg — حداکثر ۱۵۰ مگابایت</span>
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleVideoUpload}
+                className="hidden"
+                disabled={uploadingVideo}
+              />
+            </label>
+          )}
+          {videoStatus && (
+            <p className="mt-3 rounded-full px-3 py-2 text-xs" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>
+              {videoStatus}
+            </p>
+          )}
+          <p className="mt-3 text-xs" style={{ color: "var(--ink-soft)" }}>
+            اگر ویدیو اضافه شود، در صفحه محصول بالای ویس نمایش داده می‌شود.
+          </p>
+        </div>
+      </Field>
+
       <div className="flex gap-3">
         <button
           type="submit"
-          disabled={saving || uploadingAudio || recordingAudio}
+          disabled={saving || uploadingAudio || recordingAudio || uploadingVideo}
           className="rounded-full px-8 py-3 text-sm font-medium disabled:opacity-60"
           style={{ background: "var(--accent)", color: "var(--accent-ink)" }}
         >

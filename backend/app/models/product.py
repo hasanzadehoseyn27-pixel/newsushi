@@ -56,6 +56,7 @@ class Product(Base):
     # JSON array of image URLs (first = cover image, rest = gallery/slider).
     images: Mapped[list[str]] = mapped_column(JSON, default=list)
     audio_url: Mapped[str] = mapped_column(String(500), default="", server_default="")
+    video_url: Mapped[str] = mapped_column(String(500), default="", server_default="")
 
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
 

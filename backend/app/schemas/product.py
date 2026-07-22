@@ -27,6 +27,7 @@ class ProductBase(BaseModel):
     animation: AnimationPreset = AnimationPreset.FLOAT
     images: list[str] = []
     audio_url: str = ""
+    video_url: str = ""
     sort_order: int = 0
 
 
@@ -52,6 +53,7 @@ class ProductUpdate(BaseModel):
     animation: AnimationPreset | None = None
     images: list[str] | None = None
     audio_url: str | None = None
+    video_url: str | None = None
     sort_order: int | None = None
 
 

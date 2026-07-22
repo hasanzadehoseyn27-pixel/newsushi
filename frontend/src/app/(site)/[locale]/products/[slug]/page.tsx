@@ -8,6 +8,7 @@ import { Starfield } from "@/components/three/starfield";
 import { Product3DSlider } from "@/components/product/product-slider-3d";
 import { FloatingProductBites } from "@/components/product/floating-product-bites";
 import { ProductAudioPlayer } from "@/components/product/product-audio-player";
+import { ProductVideoPlayer } from "@/components/product/product-video-player";
 import { AddToCartButton } from "@/components/product/add-to-cart-button";
 import { ProductCard } from "@/components/product/product-card";
 import {
@@ -75,12 +76,19 @@ export default async function ProductPage({
   const ingredients = localizedIngredients(product, locale as Locale);
   const images = product.images.map(resolveImageUrl);
   const audio = product.audio_url ? resolveImageUrl(product.audio_url) : "";
+  const video = product.video_url ? resolveImageUrl(product.video_url) : "";
   const audioTitle =
     {
       fa: "توضیحات محصول",
       en: "Product description",
       ja: "商品説明",
     }[locale as Locale] ?? "Product description";
+  const videoTitle =
+    {
+      fa: name,
+      en: name,
+      ja: name,
+    }[locale as Locale] ?? name;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -144,6 +152,15 @@ export default async function ProductPage({
               <p className="mt-4 leading-relaxed" style={{ color: "var(--ink-soft)" }}>
                 {description}
               </p>
+            )}
+
+            {video && (
+              <ProductVideoPlayer
+                src={video}
+                title={videoTitle}
+                poster={images[0]}
+                locale={locale as Locale}
+              />
             )}
 
             {audio && <ProductAudioPlayer src={audio} title={audioTitle} locale={locale as Locale} />}
