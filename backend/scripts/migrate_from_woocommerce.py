@@ -50,6 +50,20 @@ TRANSLATE = True
 # =======================================================================
 
 
+PERSIAN_TO_LATIN = {
+    "آ": "a", "ا": "a", "ب": "b", "پ": "p", "ت": "t", "ث": "s", "ج": "j",
+    "چ": "ch", "ح": "h", "خ": "kh", "د": "d", "ذ": "z", "ر": "r", "ز": "z",
+    "ژ": "zh", "س": "s", "ش": "sh", "ص": "s", "ض": "z", "ط": "t", "ظ": "z",
+    "ع": "", "غ": "gh", "ف": "f", "ق": "gh", "ک": "k", "گ": "g", "ل": "l",
+    "م": "m", "ن": "n", "و": "v", "ه": "h", "ی": "y", "ء": "",
+}
+
+
+def transliterate_persian(value: str) -> str:
+    value = value.replace("ي", "ی").replace("ك", "ک")
+    return "".join(PERSIAN_TO_LATIN.get(ch, ch) for ch in value)
+
+
 def strip_html(text: str) -> str:
     if not text:
         return ""
@@ -141,9 +155,22 @@ class WooCommerceClient:
         return list(self._paginate("products"))
 
 
-def slugify_fallback(value: str, index: int) -> str:
-    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
-    return slug or f"item-{index}"
+def build_slug(name_fa: str, name_en: str, fallback_id) -> str:
+    """Always produce a clean, Latin, URL-safe slug (never url-encoded Persian)."""
+    source = name_en.strip() if name_en and re.fullmatch(r"[\x00-\x7f\s\-]+", name_en.strip()) else ""
+    if not source:
+        source = transliterate_persian(name_fa)
+    slug = re.sub(r"[^a-z0-9]+", "-", source.lower()).strip("-")
+    return slug or f"item-{fallback_id}"
+
+
+def make_unique(slug: str, used: set[str], fallback_id) -> str:
+    if slug not in used:
+        used.add(slug)
+        return slug
+    unique = f"{slug}-{fallback_id}"
+    used.add(unique)
+    return unique
 
 
 def main():
@@ -169,6 +196,8 @@ def main():
 
     existing_categories = {c["slug"]: c for c in newsushi.list_categories()}
     existing_products = {p["slug"] for p in newsushi.list_products()}
+    used_category_slugs = set(existing_categories.keys())
+    used_product_slugs = set(existing_products)
 
     print("۳) ساخت دسته‌بندی‌ها در نیوسوشی...")
     category_id_by_wc_id: dict[int, int] = {}
@@ -177,13 +206,15 @@ def main():
             # دسته‌بندی خالی (بدون محصول) را رد می‌کنیم تا شلوغ نشود
             pass
 
-        slug = cat["slug"] or slugify_fallback(cat["name"], index)
+        base_slug = build_slug(cat["name"], "", cat["id"])
         name_fa = cat["name"]
 
-        if slug in existing_categories:
-            category_id_by_wc_id[cat["id"]] = existing_categories[slug]["id"]
+        if base_slug in existing_categories:
+            category_id_by_wc_id[cat["id"]] = existing_categories[base_slug]["id"]
             print(f"   ⏭️  دسته‌بندی «{name_fa}» از قبل موجود است، رد شد.")
             continue
+
+        slug = make_unique(base_slug, used_category_slugs, cat["id"])
 
         name_en = newsushi.translate(name_fa, "en") if TRANSLATE else ""
         name_ja = newsushi.translate(name_fa, "ja") if TRANSLATE else ""
@@ -207,11 +238,14 @@ def main():
 
     print("۴) ساخت محصولات در نیوسوشی...")
     for index, prod in enumerate(wc_products):
-        slug = prod["slug"] or slugify_fallback(prod["name"], index)
+        name_fa_raw = html.unescape(prod["name"])
+        base_slug = build_slug(name_fa_raw, "", prod["id"])
 
-        if slug in existing_products:
+        if base_slug in existing_products:
             print(f"   ⏭️  محصول «{prod['name']}» از قبل موجود است، رد شد.")
             continue
+
+        slug = make_unique(base_slug, used_product_slugs, prod["id"])
 
         wc_cats = prod.get("categories") or []
         category_id = None
@@ -227,7 +261,7 @@ def main():
                 continue
             category_id = fallback_cat["id"]
 
-        name_fa = html.unescape(prod["name"])
+        name_fa = name_fa_raw
         description_fa = strip_html(prod.get("description") or prod.get("short_description") or "")
 
         price_raw = prod.get("regular_price") or prod.get("price") or "0"
